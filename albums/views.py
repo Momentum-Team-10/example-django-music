@@ -10,7 +10,6 @@ def list_albums(request):
 
 
 def add_album(request):
-    breakpoint()
     if request.method == "POST":
         form = AlbumForm(data=request.POST)
         if form.is_valid():
