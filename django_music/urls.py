@@ -19,13 +19,14 @@ from django.urls import path, include
 from albums import views as album_views
 
 urlpatterns = [
-    path("", album_views.list_albums, name="home"),
+    path("", album_views.homepage, name="home"),
     path("albums/", album_views.list_albums, name="list_albums"),
     path("albums/new", album_views.add_album, name="add_album"),
     path("albums/<int:pk>", album_views.show_album, name="show_album"),
     path("albums/<int:pk>/edit", album_views.edit_album, name="edit_album"),
     path("albums/<int:pk>/delete", album_views.delete_album, name="delete_album"),
     path("admin/", admin.site.urls),
+    path('accounts/', include('registration.backends.simple.urls')),
 ]
 
 if settings.DEBUG:
