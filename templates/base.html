@@ -11,10 +11,17 @@
 </head>
 
 <body class="sans-serif">
-  <header class="header bg-black b--white-10 flex">
-    <h1 class="f3 ma1 lh-title white"><i class="fas fa-headphones white ph2"></i>Django Music</h1>
-    <nav class="flex justify-end bb ">
-      <div class="flex-grow pa3 flex items-center"></div>
+  <header class="header bg-black b--white-10 flex justify-between">
+    <h1 class="f3 lh-title white items-center"><i class="fas fa-headphones white ph2"></i>Django Music</h1>
+    <nav class="flex bb ">
+      <div class="flex-grow pa3 flex items-center">
+        {% if user.is_authenticated %}
+        <p class="white">Hello, {{ user.username }}!</p>
+        <a href="{% url 'auth_logout' %}" class="white ml3">Logout</a>
+        {% else %}
+        <a href="{% url 'auth_login' %}" class="white">Login</a>
+        {% endif %}
+      </div>
     </nav>
   </header>
 
