@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Album
 from .forms import AlbumForm
+from .view_helpers import admin_user_check
 
 
 def homepage(request):
@@ -17,7 +18,8 @@ def list_albums(request):
     albums = Album.objects.all().order_by("title")
     return render(request, "albums/list_albums.html", {"albums": albums})
 
-
+@login_required
+@user_passes_test(admin_user_check) #https://docs.djangoproject.com/en/3.2/topics/auth/default/#django.contrib.auth.decorators.user_passes_test
 def add_album(request):
     if request.method == "POST":
         form = AlbumForm(data=request.POST)
