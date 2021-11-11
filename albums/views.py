@@ -14,7 +14,6 @@ def homepage(request):
     return render(request, "albums/homepage.html")
 
 
-@login_required
 def list_albums(request):
     albums = Album.objects.all().order_by("title")
     return render(request, "albums/list_albums.html", {"albums": albums})
@@ -54,7 +53,6 @@ def add_genre(request):
     return render(request, "albums/add_genre.html", context)
 
 
-@login_required
 def show_genre(request, slug):
     genre = get_object_or_404(Genre, slug=slug)
     albums = genre.albums.all()
@@ -66,7 +64,8 @@ def show_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
     return render(request, "albums/show_album.html", {"album": album, "genres": album.genres.all()})
 
-
+@user_passes_test(admin_user_check)
+@login_required
 def edit_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
     if request.method == "GET":
@@ -79,7 +78,8 @@ def edit_album(request, pk):
 
     return render(request, "albums/edit_album.html", {"form": form, "album": album})
 
-
+@user_passes_test(admin_user_check)
+@login_required
 def delete_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
 
