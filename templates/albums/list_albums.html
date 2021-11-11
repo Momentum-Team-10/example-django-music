@@ -8,12 +8,18 @@
     {% endfor %}
 </div>
 {% endif %}
+{% if user.is_staff %}
+<section class="manage-genres">
+  <p>You're an admin! So you can...</p>
+  <a href={% url 'add_genre' %} class="db dark-pink link dim"><i class="fa fa-plus ph2"></i>Add a new genre</a>
+</section>
+{% endif %}
 <section class="album-list">
   <h1>All Albums</h1>
   {% for album in albums %}
   <div class="album mv4 pa3 br1 measure-narrow ba b--light-silver">
       <a href={% url 'show_album' pk=album.pk %} class="album_title f3 fw6 db dark-pink no-underline underline-hover">{{ album.title }}</a>
-      <p class="mv3">{{ album.artist_name }} </p>
+      <p class="mv3">{{ album.artist.name }} </p>
       <a href={% url 'edit_album' pk=album.pk%} class="f8 blue no-underline underline-hover"><i class="fa fa-edit ph2 pink"></i>edit</a>
       <a href={% url 'delete_album' pk=album.pk%} class="f8 blue no-underline underline-hover"><i class="fa fa-times ph2 pink"></i>delete</a>
   </div>

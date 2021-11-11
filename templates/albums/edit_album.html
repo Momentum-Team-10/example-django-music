@@ -7,12 +7,16 @@
   <form action="{% url 'edit_album' pk=album.pk %}" method="POST">
     {% csrf_token %}
     <div class="form-field mt3">
-      <label for="{{form.title.id_for_label}}" class="db fw4 lh-copy f6">{{ form.title.label}}</label>
-      <input class="pa2 input-reset ba bg-transparent w-100 measure" type="text" name={{form.title.html_name}} id="album-title">
+      <label for="{{form.title.id_for_label}}" class="db fw4 lh-copy f6">{{ form.title.label }}</label>
+      <input class="pa2 input-reset ba bg-transparent w-100 measure" type="text" name={{form.title.html_name}} id="album-title" value="{{ album.title }}"">
     </div>
     <div class="form-field mt3">
-      <label class="db fw4 lh-copy f6" for="{{form.artist_name.id_for_label}}">{{form.artist_name.label }}</label>
-      <input class="pa2 input-reset ba bg-transparent w-100 measure" type="text" name={{form.artist_name.html_name }} id="artist-name">
+      <label class="db fw4 lh-copy f6" for="{{form.artist.id_for_label}}">{{form.artist.label }}</label>
+      {{ form.artist.as_widget }}
+    </div>
+    <div class="form-field mt3">
+      <label class="db fw4 lh-copy f6" for="{{form.genres.id_for_label}}">{{form.genres.label }}</label>
+      {{ form.genres.as_widget }}
     </div>
     <div class="mt3">
       <button type="submit">Save changes</button>

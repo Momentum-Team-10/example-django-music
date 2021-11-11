@@ -9,5 +9,8 @@
 <div class="mt2 f6 lh-copy">
   <p class="mt5 ml5 album_title f3 fw6 db dark-pink">{{ album.title }}</p>
   <p class="ml5 f5 gray">{{ album.artist_name }}</p>
+  {% for genre in genres %}
+    <p class="f6 link br-pill ba bw1 ph2 pv1 mb2 dib dark-pink">{{genre}}</p>
+  {% endfor %}
 </div>
 {% endblock content %}

@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Album
-from .forms import AlbumForm
+from django.utils.text import slugify
+from .models import Album, Genre
+from .forms import AlbumForm, GenreForm
 from .view_helpers import admin_user_check
-
+from django.db import IntegrityError
 
 def homepage(request):
     # show a homepage
@@ -26,16 +27,44 @@ def add_album(request):
         if form.is_valid():
             album = form.save(commit=False)
             album.save()
+
             return redirect("show_album", pk=album.pk)
     else:
         form = AlbumForm()
 
     return render(request, "albums/add_album.html", {"form": form})
 
+@user_passes_test(admin_user_check)
+def add_genre(request):
+    context = {}
+    if request.method == "POST":
+        form = GenreForm(data=request.POST)
+        if form.is_valid():
+            genre = form.save(commit=False)
+            genre.slug = slugify(genre.name)
+            try:
+                genre.save()
+                return redirect("show_genre", slug=genre.slug)
+            except IntegrityError:
+                context['warning'] = "Genre already exists"
+                context['form'] = GenreForm()
+    else:
+        context['form'] = GenreForm()
+
+    return render(request, "albums/add_genre.html", context)
+
+
+@login_required
+def show_genre(request, slug):
+    genre = get_object_or_404(Genre, slug=slug)
+    albums = genre.albums.all()
+
+    return render(request, "albums/show_genre.html", {"genre": genre, "albums": albums})
+
 
 def show_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
-    return render(request, "albums/show_album.html", {"album": album})
+    return render(request, "albums/show_album.html", {"album": album, "genres": album.genres.all()})
 
 
 def edit_album(request, pk):
