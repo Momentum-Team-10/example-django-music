@@ -89,3 +89,6 @@ def delete_album(request, pk):
         return redirect("list_albums")
 
     return render(request, "albums/delete_album.html", {"album": album})
+
+def add_favorite_album(request):
+    pass
