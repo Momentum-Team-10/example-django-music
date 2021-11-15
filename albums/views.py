@@ -90,3 +90,13 @@ def delete_album(request, pk):
 
 def add_favorite_album(request):
     pass
+
+
+def search_by_title(request):
+    # get the search term from the query params
+    query = request.GET.get("q")
+    # use that search term to make a db query, save it to a variable
+    results = Album.objects.filter(title__icontains=query)
+    # send back a response that includes the data from the query
+
+    return render(request, "albums/list_albums.html", {"albums": results})
