@@ -39,10 +39,8 @@ def add_genre(request):
     if request.method == "POST":
         form = GenreForm(data=request.POST)
         if form.is_valid():
-            genre = form.save(commit=False)
-            genre.slug = slugify(genre.name)
             try:
-                genre.save()
+                genre = form.save()
                 return redirect("show_genre", slug=genre.slug)
             except IntegrityError:
                 context['warning'] = "Genre already exists"

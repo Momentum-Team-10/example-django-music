@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.text import slugify
 
 class User(AbstractUser):
     def __repr__(self):
@@ -18,6 +19,11 @@ class Genre(models.Model):
 
     def __repr__(self):
         return f"<Genre name={self.name}>"
+
+    def save(self):
+        self.slug = slugify(self.name)
+        super().save()
+
 
 class Artist(models.Model):
     name = models.CharField(max_length=255)
