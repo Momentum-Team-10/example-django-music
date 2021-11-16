@@ -6,6 +6,8 @@ from .models import Album, Genre
 from .forms import AlbumForm, GenreForm
 from .view_helpers import admin_user_check
 from django.db import IntegrityError
+from django.db.models import Q
+
 
 def homepage(request):
     # show a homepage
@@ -32,6 +34,7 @@ def add_album(request):
         form = AlbumForm()
 
     return render(request, "albums/add_album.html", {"form": form})
+
 
 @user_passes_test(admin_user_check)
 def add_genre(request):
@@ -98,5 +101,31 @@ def search_by_title(request):
     # use that search term to make a db query, save it to a variable
     results = Album.objects.filter(title__icontains=query)
     # send back a response that includes the data from the query
+
+    return render(request, "albums/list_albums.html", {"albums": results})
+
+
+def search_by_title_and_artist(request):
+    """Return results for a search on title AND artist."""
+    # get the search term from query params like ?artist=Beyonce&title=lemonade
+    # note that we don't currently have a template with a search form that allows this
+    title_query = request.GET.get("title")
+    artist_query = request.GET.get("artist")
+    # results must match BOTH lookups
+    results = Album.objects.filter(
+        title__icontains=title_query, artist__name=artist_query
+    )
+
+    return render(request, "albums/list_albums.html", {"albums": results})
+
+
+def search_by_artist_or_title(request):
+    # this search could work with the existing search form
+    query = request.GET.get("q")
+    # search using a logical OR operator, the `|` character, and Django's `Q` objects
+    # https://docs.djangoproject.com/en/3.2/topics/db/queries/#complex-lookups-with-q-objects
+    results = Album.objects.filter(
+        Q(title__icontains=query) | Q(artist__name__icontains=query)
+    )
 
     return render(request, "albums/list_albums.html", {"albums": results})
