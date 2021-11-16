@@ -2,7 +2,23 @@ console.log('HELLOOOO HI HEY')
 // The user clicks on the outline heart icon to mark album as a favorite
 // If the heart is solid, that means it is favorited
 // If the user clicks on the solid heart, remove that album from their favorites
-const csrfToken = Cookies.get('csrftoken')
+function getCookie(name) {
+  let cookieValue = null
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';')
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim()
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === name + '=') {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+        break
+      }
+    }
+  }
+  return cookieValue
+}
+const csrfToken = getCookie('csrftoken')
+// const csrfToken = Cookies.get('csrftoken')
 const favLink = document.querySelector('.fav-link')
 favLink.addEventListener('click', (event) => {
   event.preventDefault()

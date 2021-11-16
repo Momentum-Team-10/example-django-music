@@ -67,7 +67,7 @@ def show_genre(request, slug):
 @login_required
 def show_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
-    favorited_by_user = request.user.favorite_albums.filter(id=album.id).exists()
+    favorited_by_user = request.user.favorite_albums.filter(pk=album.pk).exists()
     return render(
         request,
         "albums/show_album.html",
