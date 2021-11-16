@@ -1,16 +1,46 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block javascript %}
+{% comment %} <script>const csrfToken = "{{ csrf_token }}" </script> {% endcomment %}
+{% comment %} <script>
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  const csrfToken = getCookie('csrftoken');
+</script> {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<script src={% static 'js/show_album.js' %} defer></script>
+{% endblock javascript %}
+
 {% block content %}
 
-<!-- <img class="db ba b--black-10" / alt="Frank Ocean Blonde Album Cover" src="https://s3-us-west-1.amazonaws.com/tachyonsio/img/Blonde-Frank_Ocean.jpeg"> -->
-<h2>Album Detail</h2>
+<h3>Album Detail</h3>
 
 <a href={% url 'list_albums' %}>Back to all albums</a>
-<div class="mt2 f6 lh-copy">
-  <p class="mt5 ml5 album_title f3 fw6 db dark-pink">{{ album.title }}</p>
+<div class="ma5 pa2 f6 lh-copy ba b--light-silver br2 measure-narrow">
+  <p class="album_title f3 fw6 db black">{{ album.title }}</p>
   <p class="ml5 f5 gray">{{ album.artist_name }}</p>
+  <a href={% url "favorite_album" pk=album.pk %} class="fav-link db" data-favorited={{favorited}}>
+    <i class="{% if favorited %} fas {% else %} far {% endif %} fa-heart hot-pink f3"></i>
+  </a>
   {% for genre in genres %}
-    <p class="f6 link br-pill ba bw1 ph2 pv1 mb2 dib dark-pink">{{genre}}</p>
+    <p class="f7 link br-pill ba bw1 ph2 pv1 mb2 dib white bg-dark-pink">{{genre}}</p>
   {% endfor %}
 </div>
+
 {% endblock content %}
+

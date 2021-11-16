@@ -27,6 +27,7 @@ urlpatterns = [
     path("albums/<int:pk>", album_views.show_album, name="show_album"),
     path("albums/<int:pk>/edit", album_views.edit_album, name="edit_album"),
     path("albums/<int:pk>/delete", album_views.delete_album, name="delete_album"),
+    path("albums/<int:pk>/favorite", album_views.favorite_album, name="favorite_album"),
     path("genres/new", album_views.add_genre, name="add_genre"),
     path("genres/<slug:slug>", album_views.show_genre, name="show_genre"),
     path("search", album_views.search_by_title, name="search_by_title"),

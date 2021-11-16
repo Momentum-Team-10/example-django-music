@@ -1,10 +1,11 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.text import slugify
 from .models import Album, Genre
 from .forms import AlbumForm, GenreForm
-from .view_helpers import admin_user_check
+from .view_helpers import admin_user_check, is_ajax
 from django.db import IntegrityError
 from django.db.models import Q
 
@@ -63,13 +64,14 @@ def show_genre(request, slug):
 
     return render(request, "albums/show_genre.html", {"genre": genre, "albums": albums})
 
-
+@login_required
 def show_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
+    favorited_by_user = request.user.favorite_albums.filter(id=album.id).exists()
     return render(
         request,
         "albums/show_album.html",
-        {"album": album, "genres": album.genres.all()},
+        {"album": album, "genres": album.genres.all(), "favorited": favorited_by_user },
     )
 
 
@@ -101,8 +103,25 @@ def delete_album(request, pk):
     return render(request, "albums/delete_album.html", {"album": album})
 
 
-def add_favorite_album(request):
-    pass
+@login_required
+def favorite_album(request, pk):
+    # get the user
+    user = request.user
+    # get the album
+    album = get_object_or_404(Album, pk=pk)
+
+    if request.method == "DELETE":
+        album.favorited_by.remove(user)
+        favorited = False
+    elif request.method == 'POST':
+        album.favorited_by.add(user)
+        favorited = True
+
+    if is_ajax(request):
+        return JsonResponse({"favorited": favorited })
+
+    return redirect("show_album", pk=pk)
+
 
 
 def search_by_title(request):
