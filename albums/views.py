@@ -20,8 +20,11 @@ def list_albums(request):
     albums = Album.objects.all().order_by("title")
     return render(request, "albums/list_albums.html", {"albums": albums})
 
+
 @login_required
-@user_passes_test(admin_user_check) #https://docs.djangoproject.com/en/3.2/topics/auth/default/#django.contrib.auth.decorators.user_passes_test
+@user_passes_test(
+    admin_user_check
+)  # https://docs.djangoproject.com/en/3.2/topics/auth/default/#django.contrib.auth.decorators.user_passes_test
 def add_album(request):
     if request.method == "POST":
         form = AlbumForm(data=request.POST)
@@ -46,10 +49,10 @@ def add_genre(request):
                 genre = form.save()
                 return redirect("show_genre", slug=genre.slug)
             except IntegrityError:
-                context['warning'] = "Genre already exists"
-                context['form'] = GenreForm()
+                context["warning"] = "Genre already exists"
+                context["form"] = GenreForm()
     else:
-        context['form'] = GenreForm()
+        context["form"] = GenreForm()
 
     return render(request, "albums/add_genre.html", context)
 
@@ -63,7 +66,12 @@ def show_genre(request, slug):
 
 def show_album(request, pk):
     album = get_object_or_404(Album, pk=pk)
-    return render(request, "albums/show_album.html", {"album": album, "genres": album.genres.all()})
+    return render(
+        request,
+        "albums/show_album.html",
+        {"album": album, "genres": album.genres.all()},
+    )
+
 
 @user_passes_test(admin_user_check)
 @login_required
@@ -79,6 +87,7 @@ def edit_album(request, pk):
 
     return render(request, "albums/edit_album.html", {"form": form, "album": album})
 
+
 @user_passes_test(admin_user_check)
 @login_required
 def delete_album(request, pk):
@@ -90,6 +99,7 @@ def delete_album(request, pk):
         return redirect("list_albums")
 
     return render(request, "albums/delete_album.html", {"album": album})
+
 
 def add_favorite_album(request):
     pass
