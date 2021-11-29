@@ -10,6 +10,9 @@ django-debug-toolbar = "*"
 django-environ = "*"
 werkzeug = "*"
 django-registration-redux = "*"
+psycopg2-binary = "*"
+django-on-heroku = "*"
+gunicorn = "*"
 
 [dev-packages]
 black = "*"

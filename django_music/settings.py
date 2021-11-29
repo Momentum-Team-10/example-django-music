@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
+import django_on_heroku
 
 env = environ.Env(
     # set casting, default value
@@ -146,3 +147,7 @@ AUTH_USER_MODEL = "albums.User"
 ACCOUNT_ACTIVATION_DAYS = 5
 REGISTRATION_AUTO_LOGIN = True
 LOGIN_REDIRECT_URL = "/"
+
+# for django_on_heroku
+django_on_heroku.settings(locals())
+del DATABASES['default']['OPTIONS']['sslmode']
